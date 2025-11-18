@@ -162,17 +162,24 @@ npm run build
 Live Demo: **Vercel**
 👉 [https://talent-scout-ai-gamma.vercel.app/](https://talent-scout-ai-gamma.vercel.app/)
 
-If deploying to Netlify, add SPA routing:
-
-```
-/*   /index.html   200
-```
-
 ---
 
 ## 📸 Screenshots
 
-> *Add your dashboard, job configuration, and resume parsing screenshots here.*
+### Dashboard
+![Dashboard](assets/dashboard.png)
+
+### Job Posting
+![Job Posting](assets/job_post.png)
+
+### Candidates
+![Candidates](assets/candidates.png)
+
+### Upload Resume
+![Upload Resume](assets/resume.png)
+
+### User profile
+![User profile](assets/profiles.png)
 
 ---
 
@@ -200,6 +207,3 @@ If deploying to Netlify, add SPA routing:
 
 MIT License – free to use and improve.
 
----
-
-If you'd like, I can format this as **Markdown with emojis removed**, or create a **minimalist professional version** as well.
