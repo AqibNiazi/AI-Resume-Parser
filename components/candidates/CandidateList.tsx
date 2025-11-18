@@ -1,7 +1,7 @@
 import React from 'react';
 import { Candidate } from '../../types';
 import Card, { CardContent } from '../ui/Card';
-import { CheckCircleIcon, XCircleIcon } from '../icons';
+import { CheckCircleIcon, XCircleIcon, InformationCircleIcon } from '../icons';
 
 interface CandidateListProps {
   candidates: Candidate[];
@@ -25,12 +25,21 @@ const CandidateRow: React.FC<{candidate: Candidate, onViewCandidate: (id: string
             <td className="p-4">
                 <p className="font-medium text-foreground">{candidate.parsedData?.name || candidate.fileName}</p>
                 <p className="text-sm text-muted-foreground">{candidate.parsedData?.email || 'N/A'}</p>
+                {candidate.status === 'error' && (
+                    <p className="text-xs text-red-500 mt-1 truncate max-w-[200px]" title={candidate.error}>
+                        Error: {candidate.error}
+                    </p>
+                )}
             </td>
             <td className="p-4 text-center">
                 {candidate.status === 'completed' && score !== undefined && score !== null ? (
                     <div className="flex items-center justify-center gap-2">
                         <div className={`w-2.5 h-2.5 rounded-full ${getScoreColor(score)}`}></div>
                         <span className="font-mono text-sm">{score}</span>
+                    </div>
+                ) : candidate.status === 'error' ? (
+                    <div className="flex items-center justify-center text-red-500" title="Scoring Failed">
+                        <XCircleIcon className="w-5 h-5" />
                     </div>
                 ) : (
                     <span className="text-xs text-muted-foreground italic capitalize px-2 py-1 bg-muted rounded-md">{candidate.status}...</span>
@@ -49,6 +58,8 @@ const CandidateRow: React.FC<{candidate: Candidate, onViewCandidate: (id: string
                             <XCircleIcon className="w-6 h-6 text-red-500 mx-auto" aria-hidden="true" />
                         </>
                     )
+                ) : candidate.status === 'error' ? (
+                    <span className="text-xs text-muted-foreground">N/A</span>
                 ) : (
                     <span className="text-muted-foreground">-</span>
                 )}
@@ -57,7 +68,8 @@ const CandidateRow: React.FC<{candidate: Candidate, onViewCandidate: (id: string
                 <button 
                     onClick={() => onViewCandidate(candidate.id)}
                     className="text-sm font-medium text-primary hover:underline disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed"
-                    disabled={candidate.status !== 'completed'}
+                    disabled={!candidate.parsedData}
+                    title={!candidate.parsedData ? "Wait for parsing to complete" : "View Candidate Details"}
                 >
                     View Details
                 </button>

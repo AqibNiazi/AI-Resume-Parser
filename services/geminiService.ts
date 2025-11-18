@@ -87,9 +87,18 @@ export const parseResume = async (file: File): Promise<ParsedResume> => {
       }
     });
     
-    // The Gemini SDK's .text property directly gives the JSON string
-    const parsedJson = JSON.parse(response.text);
-    return parsedJson as ParsedResume;
+    const text = response.text;
+    if (!text) {
+        throw new Error("Empty response received from Gemini API during resume parsing.");
+    }
+
+    try {
+        const parsedJson = JSON.parse(text);
+        return parsedJson as ParsedResume;
+    } catch (e) {
+        console.error("JSON Parse Error:", e, text);
+        throw new Error("Failed to parse resume data. The model returned invalid JSON.");
+    }
 
   } catch (error) {
     console.error("Error parsing resume with Gemini:", error);
@@ -125,8 +134,18 @@ export const scoreCandidate = async (parsedResume: ParsedResume, jobDescription:
       }
     });
 
-    const parsedJson = JSON.parse(response.text);
-    return parsedJson as ScoringResult;
+    const text = response.text;
+    if (!text) {
+        throw new Error("Empty response received from Gemini API during candidate scoring.");
+    }
+
+    try {
+        const parsedJson = JSON.parse(text);
+        return parsedJson as ScoringResult;
+    } catch (e) {
+        console.error("JSON Parse Error:", e, text);
+        throw new Error("Failed to parse scoring results. The model returned invalid JSON.");
+    }
 
   } catch (error) {
     console.error("Error scoring candidate with Gemini:", error);

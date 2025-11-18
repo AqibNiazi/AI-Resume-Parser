@@ -1,6 +1,6 @@
 import React from 'react';
 import { Candidate } from '../../types';
-import { XIcon, DocumentTextIcon, CheckCircleIcon, XCircleIcon } from '../icons';
+import { XIcon, DocumentTextIcon, CheckCircleIcon, XCircleIcon, InformationCircleIcon } from '../icons';
 
 interface CandidateProfileProps {
   candidate: Candidate;
@@ -19,12 +19,12 @@ const SkillMatchBar: React.FC<{ skill: string, matched: boolean }> = ({ skill, m
 
 
 const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onClose }) => {
-  const { parsedData, scoringResult } = candidate;
+  const { parsedData, scoringResult, error, status } = candidate;
 
   // This is a placeholder for actual skill matching logic against a job description.
   const matchedSkills = new Set(parsedData?.skills.slice(0, 5) || []);
 
-  if (!parsedData || !scoringResult) return null;
+  if (!parsedData) return null;
 
   return (
     <>
@@ -41,21 +41,43 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onClose 
         </header>
 
         <main className="flex-grow p-6 overflow-y-auto space-y-6">
-            <section className="p-6 rounded-lg border border-border bg-muted/30">
-                <h3 className="text-lg font-semibold text-foreground mb-1">Fit Score: {scoringResult.score}</h3>
-                <p className="text-sm text-muted-foreground">{scoringResult.reasoning}</p>
-            </section>
+            
+            {status === 'error' && !scoringResult ? (
+                 <section className="p-4 rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+                    <div className="flex items-center gap-2 text-red-600 dark:text-red-400 mb-2">
+                        <InformationCircleIcon className="w-5 h-5" />
+                        <h3 className="font-semibold">Scoring Failed</h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        {error || "An error occurred while analyzing this candidate."}
+                    </p>
+                </section>
+            ) : scoringResult ? (
+                <>
+                    <section className="p-6 rounded-lg border border-border bg-muted/30">
+                        <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-lg font-semibold text-foreground">Fit Score</h3>
+                            <span className="text-2xl font-bold text-primary">{scoringResult.score}/100</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">{scoringResult.reasoning}</p>
+                    </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                    <h3 className="font-semibold text-foreground flex items-center"><CheckCircleIcon className="w-5 h-5 mr-2 text-green-500"/>Strengths</h3>
-                    <p className="text-sm text-muted-foreground">{scoringResult.strengths}</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <h3 className="font-semibold text-foreground flex items-center"><CheckCircleIcon className="w-5 h-5 mr-2 text-green-500"/>Strengths</h3>
+                            <p className="text-sm text-muted-foreground">{scoringResult.strengths}</p>
+                        </div>
+                        <div className="space-y-2">
+                            <h3 className="font-semibold text-foreground flex items-center"><XCircleIcon className="w-5 h-5 mr-2 text-red-500"/>Weaknesses</h3>
+                            <p className="text-sm text-muted-foreground">{scoringResult.weaknesses}</p>
+                        </div>
+                    </div>
+                </>
+            ) : (
+                <div className="p-6 text-center text-muted-foreground">
+                    Scoring information is unavailable.
                 </div>
-                <div className="space-y-2">
-                    <h3 className="font-semibold text-foreground flex items-center"><XCircleIcon className="w-5 h-5 mr-2 text-red-500"/>Weaknesses</h3>
-                    <p className="text-sm text-muted-foreground">{scoringResult.weaknesses}</p>
-                </div>
-            </div>
+            )}
 
             <div className="border-t border-border" />
           
@@ -65,8 +87,8 @@ const CandidateProfile: React.FC<CandidateProfileProps> = ({ candidate, onClose 
                 <div>
                   <h4 className="font-semibold text-foreground mb-2">Skills</h4>
                   <div className="space-y-2">
-                    {parsedData.skills.slice(0, 7).map(skill => (
-                        <SkillMatchBar key={skill} skill={skill} matched={matchedSkills.has(skill)} />
+                    {parsedData.skills.slice(0, 7).map((skill, idx) => (
+                        <SkillMatchBar key={idx} skill={skill} matched={matchedSkills.has(skill)} />
                     ))}
                   </div>
                 </div>

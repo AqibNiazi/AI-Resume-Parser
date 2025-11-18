@@ -1,3 +1,7 @@
+/// <reference types="vite/client" />
+
+export {};
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -6,7 +10,3 @@ declare global {
     }
   }
 }
-
-declare var process: {
-  env: NodeJS.ProcessEnv;
-};
