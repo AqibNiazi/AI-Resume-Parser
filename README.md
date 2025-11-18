@@ -207,6 +207,3 @@ Live Demo: **Vercel**
 
 MIT License – free to use and improve.
 
----
-
-If you'd like, I can format this as **Markdown with emojis removed**, or create a **minimalist professional version** as well.
