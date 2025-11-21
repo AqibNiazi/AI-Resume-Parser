@@ -90,12 +90,12 @@ This system minimizes manual effort, reduces bias, and helps teams quickly ident
 
 ### Backend
 
-* Supabase
 * Edge Functions (AI scoring logic)
+* Google Gemini API
 
 ### AI
 
-* Google Gemini 2.5 Pro
+* Google Gemini 2.5 Flash
 * Gemini Pro for resume parsing & evaluation
 
 ---
@@ -198,7 +198,7 @@ Live Demo: **Vercel**
 **Team: The Matrix**
 
 * Muhammad Aqib Javed
-* Shafqat Hussain
+* Shafqat Hussain (shafqathussain00)
 * Sarah Khan
 
 ---
